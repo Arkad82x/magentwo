@@ -6,6 +6,11 @@ module Magentwo
       self.opts = opts || []
     end
 
+
+    #################
+    # Filters
+    ################
+
     def filter args, invert:false
       filter = case args
       when Hash
@@ -41,20 +46,9 @@ module Magentwo
       self.first["items"].first.keys
     end
 
-    def info
-      first = self.first
-      {
-        :fields => first["items"].first.keys,
-        :total_count => first["total_count"]
-      }
-    end
-
     def first
-      self.page(1, 1).all
-    end
-
-    def count
-      self.first["total_count"]
+      result = self.model.call :get, self.page(1, 1).to_query
+      self.model.new result["items"].first
     end
 
     def page page, page_size=20
@@ -69,14 +63,38 @@ module Magentwo
       Dataset.new self.model, self.opts + [Filter::Like.new(args.keys.first, args.values.first)]
     end
 
+
+
+    #################
+    # Fetching
+    ################
+    def info
+      result = self.model.call :get, self.page(1, 1).to_query
+      {
+        :fields => result["items"].first.keys,
+        :total_count => result["total_count"]
+      }
+    end
+
+    def count
+      self.info[:total_count]
+    end
+
     def fields
-      self.first&.keys
+      self.info[:fields]
     end
 
     def all
-      self.model.call :get, self.to_query
+      result = self.model.call :get, self.to_query
+      return [] if result.nil?
+      result["items"].map do |item|
+        self.model.new item
+      end
     end
 
+    #################
+    # Transformation
+    ################
     def to_query
       #TODO this is a hack because api required searchCriteria to be set, so Magentwo::Product.all would lead to an error
       return "searchCriteria=" if self.opts.empty?
