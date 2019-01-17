@@ -3,12 +3,10 @@ require 'net/http'
 require 'json'
 
 module Magentwo
-  Models = %w(product customer order)
+  Models = %w(base product customer order)
 end
 
-
 require_relative 'connection.rb'
-require_relative 'model/base.rb'
 require_relative 'filter.rb'
 require_relative 'dataset.rb'
 Magentwo::Models.each do |file_name|
