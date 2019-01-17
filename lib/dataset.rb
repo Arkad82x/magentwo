@@ -87,7 +87,7 @@ module Magentwo
     def all
       result = self.model.call :get, self.to_query
       return [] if result.nil?
-      result["items"].map do |item|
+      (result["items"] || []).map do |item|
         self.model.new item
       end
     end
