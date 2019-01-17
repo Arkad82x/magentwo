@@ -17,9 +17,9 @@ module Magentwo
         Magentwo::Dataset.new(self, [])
       end
 
-      %i(filter exclude select).each do |name|
-        define_method name do |args|
-          return dataset.send(name, args)
+      %i(filter exclude select fields first count fields info page order_by like).each do |name|
+        define_method name do |*args|
+          return dataset.send(name, *args)
         end
       end
 

@@ -3,7 +3,7 @@ require 'net/http'
 require 'json'
 
 module Magentwo
-  Models = %w(product customer)
+  Models = %w(product customer order)
 end
 
 
