@@ -13,7 +13,6 @@ module Magentwo
       }
     end
 
-
     #################
     # Filters
     ################
@@ -119,6 +118,21 @@ module Magentwo
         .join("&"),
       ].reject(&:empty?)
       .join("&")
+    end
+
+    #################
+    # Functors
+    ################
+    def map
+      self.all.map do |item|
+        yield item
+      end
+    end
+
+    def each
+      self.all.each do |item|
+        yield item
+      end
     end
   end
 end
