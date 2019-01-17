@@ -101,7 +101,6 @@ module Magentwo
     # Transformation
     ################
     def to_query
-      #TODO this is a hack because api required searchCriteria to be set, so Magentwo::Product.all would lead to an error
       [
         self.opts[:filters]
         .each_with_index
@@ -123,16 +122,14 @@ module Magentwo
     #################
     # Functors
     ################
-    def map
-      self.all.map do |item|
-        yield item
-      end
+    def map(&block)
+      raise ArgumentError, "no block given" unless block_given?
+      self.all.map(&block)
     end
 
-    def each
-      self.all.each do |item|
-        yield item
-      end
+    def each &block
+      raise ArgumentError, "no block given" unless block_given?
+      self.all.each(&block)
     end
   end
 end
