@@ -1,16 +1,22 @@
 module Magentwo
   class Dataset
     attr_accessor :model, :opts
-    def initialize model, opts
+    def initialize model, opts=nil
       self.model = model
-      self.opts = opts || []
+      self.opts = opts || {
+        :filters => [],
+        :pagination => {
+          :current_page => Filter::CurrentPage.new(1),
+          :page_size => Filter::PageSize.new(20)
+        },
+        :ordering => []
+      }
     end
 
 
     #################
     # Filters
     ################
-
     def filter args, invert:false
       filter = case args
       when Hash
@@ -31,7 +37,7 @@ module Magentwo
       else
         raise StandardError, "filter function expects Hash as input"
       end
-      Dataset.new self.model, self.opts + [filter]
+      Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + [filter])
     end
 
     def exclude args
@@ -39,31 +45,26 @@ module Magentwo
     end
 
     def select *fields
-      Dataset.new self.model, self.opts + [Filter::Fields.new(fields)]
-    end
-
-    def fields
-      self.first["items"].first.keys
-    end
-
-    def first
-      result = self.model.call :get, self.page(1, 1).to_query
-      self.model.new result["items"].first
-    end
-
-    def page page, page_size=20
-      Dataset.new self.model, self.opts + [Filter::PageSize.new(page_size), Filter::CurrentPage.new(page)]
-    end
-
-    def order_by field, direction="ASC"
-      Dataset.new self.model, self.opts + [Filter::OrderBy.new(field, direction)]
+      Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + [Filter::Fields.new(fields)])
     end
 
     def like args
-      Dataset.new self.model, self.opts + [Filter::Like.new(args.keys.first, args.values.first)]
+      Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + [Filter::Like.new(args.keys.first, args.values.first)])
     end
 
+    #################
+    # Pagination
+    ################
+    def page page, page_size=20
+      Dataset.new self.model, self.opts.merge(:pagination => {:current_page => Filter::CurrentPage.new(page), :page_size => Filter::PageSize.new(page_size)})
+    end
 
+    #################
+    # Ordering
+    ################
+    def order_by field, direction="ASC"
+      Dataset.new self.model, self.opts.merge(:ordering => self.opts[:ordering] + [Filter::OrderBy.new(field, direction)])
+    end
 
     #################
     # Fetching
@@ -71,7 +72,7 @@ module Magentwo
     def info
       result = self.model.call :get, self.page(1, 1).to_query
       {
-        :fields => result["items"].first.keys,
+        :fields => result["items"]&.first&.keys,
         :total_count => result["total_count"]
       }
     end
@@ -82,6 +83,11 @@ module Magentwo
 
     def fields
       self.info[:fields]
+    end
+
+    def first
+      result = self.model.call :get, self.page(1, 1).to_query
+      self.model.new result["items"].first
     end
 
     def all
@@ -97,11 +103,21 @@ module Magentwo
     ################
     def to_query
       #TODO this is a hack because api required searchCriteria to be set, so Magentwo::Product.all would lead to an error
-      return "searchCriteria=" if self.opts.empty?
+      [
+        self.opts[:filters]
+        .each_with_index
+        .map { |opt, idx| opt.to_query(idx) }
+        .join("&"),
 
-      self.opts
-      .each_with_index
-      .map { |opt, idx| opt.to_query(idx) }
+        self.opts[:pagination]
+        .map { |k, v| v.to_query}
+        .join("&"),
+
+
+        self.opts[:ordering]
+        .map { |opt, idx| opt.to_query(idx) }
+        .join("&"),
+      ].reject(&:empty?)
       .join("&")
     end
   end

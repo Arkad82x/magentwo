@@ -21,7 +21,7 @@ module Magentwo
       end
 
       def dataset
-        Magentwo::Dataset.new(self, [])
+        Magentwo::Dataset.new(self)
       end
 
       DatasetMethods.each do |name|
