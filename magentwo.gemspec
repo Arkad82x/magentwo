@@ -6,6 +6,7 @@ Gem::Specification.new do |s|
   s.description = "Provides a simple Ruby Interface to interact with the Magento 2 API"
   s.authors     = ["André Mueß"]
   s.email       = 'andre.cux90@gmail.com'
-  s.files       = ["lib/magentwo.rb"]
   s.license     = 'MIT'
+  s.homepage    = "https://github.com/Arkad82x/magentwo"
+  s.files       = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
 end
