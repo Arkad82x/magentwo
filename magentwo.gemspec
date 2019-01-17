@@ -1,4 +1,3 @@
-% cat hola.gemspec
 Gem::Specification.new do |s|
   s.name        = 'Magentwo'
   s.version     = '0.0.0'
