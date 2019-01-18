@@ -3,7 +3,7 @@ module Magentwo
     attr_accessor :host, :user, :password, :token, :base_path
 
     def initialize host, user, password, base_path:nil
-      if host.includes? ":"
+      if host.include? ":"
         @host = host.split(":").first
         @port = host.splut(":").last
       else
