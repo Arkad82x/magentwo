@@ -1,11 +1,11 @@
 module Magentwo
   class Connection
-    attr_accessor :host, :user, :password, :token, :base_path
+    attr_accessor :host, :port, :user, :password, :token, :base_path
 
     def initialize host, user, password, base_path:nil
       if host.include? ":"
         @host = host.split(":").first
-        @port = host.split(":").last
+        @port = host.split(":").last.to_i
       else
         @host = host
         @port = 80
@@ -17,6 +17,7 @@ module Magentwo
     end
 
     def request_token
+      p self
       Net::HTTP.start(self.host,self.port) do |http|
         req = Net::HTTP::Post.new("#{base_path}/integration/admin/token")
         req.body = {:username=> self.user, :password=> self.password}.to_json
@@ -52,7 +53,7 @@ module Magentwo
 
     def get url
       p "get: #{url}"
-      Net::HTTP.start(host,port) do |http|
+      Net::HTTP.start(self.host,self.port) do |http|
         req = Net::HTTP::Get.new(url)
         req["Authorization"] = "Bearer #{self.token}"
         req['Content-Type'] = "application/json"
