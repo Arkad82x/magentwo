@@ -5,7 +5,7 @@ module Magentwo
     def initialize host, user, password, base_path:nil
       if host.include? ":"
         @host = host.split(":").first
-        @port = host.splut(":").last
+        @port = host.split(":").last
       else
         @host = host
         @port = 80
