@@ -66,8 +66,8 @@ module Magentwo
     def info
       result = self.model.call :get, self.page(1, 1).to_query
       {
-        :fields => result["items"]&.first&.keys,
-        :total_count => result["total_count"]
+        :fields => result[:items]&.first&.keys,
+        :total_count => result[:total_count]
       }
     end
 
@@ -81,13 +81,13 @@ module Magentwo
 
     def first
       result = self.model.call :get, self.page(1, 1).to_query
-      self.model.new result["items"].first
+      self.model.new result[:items].first
     end
 
     def all
       result = self.model.call :get, self.to_query
       return [] if result.nil?
-      (result["items"] || []).map do |item|
+      (result[:items] || []).map do |item|
         self.model.new item
       end
     end

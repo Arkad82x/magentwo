@@ -65,7 +65,7 @@ module Magentwo
     private
     def handle_response response
       case response.code
-      when "200" then JSON.parse response.body
+      when "200" then JSON.parse response.body, :symbolize_names => true
       else
         raise "request failed #{response.code} #{response.body}"
       end

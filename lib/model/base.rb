@@ -9,6 +9,22 @@ module Magentwo
           instance_variable_set key_sym, value
         end
       end
+      if self.respond_to? :custom_attributes
+        self.custom_attributes = args[:custom_attributes].map do |attr|
+          Hash[attr[:attribute_code].to_sym, attr[:value]]
+        end.inject(&:merge)
+      end
+    end
+
+    def method_missing m, *args, &block
+      if custom_attr = self.custom_attributes[m]
+          return custom_attr
+      end
+
+      if extension_attr = self.extension_attributes[m]
+        return extension_attr
+      end
+      nil
     end
 
     class << self; attr_accessor :connection end
@@ -29,7 +45,6 @@ module Magentwo
           return dataset.send(name, *args)
         end
       end
-
     end
   end
 end
