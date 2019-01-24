@@ -27,7 +27,7 @@ module Magentwo
       end
     end
 
-    def call method, path, query
+    def call method, path, query:nil
       url = "#{base_path}/#{path}?#{query}"
       case method
       when :get then self.get url

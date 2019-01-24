@@ -64,7 +64,7 @@ module Magentwo
     # Fetching
     ################
     def info
-      result = self.model.call :get, self.page(1, 1).to_query
+      result = self.model.call :get, {:query => self.page(1, 1).to_query}
       {
         :fields => result[:items]&.first&.keys,
         :total_count => result[:total_count]
@@ -80,12 +80,12 @@ module Magentwo
     end
 
     def first
-      result = self.model.call :get, self.page(1, 1).to_query
+      result = self.model.call :get, {:query => self.page(1, 1).to_query}
       self.model.new result[:items].first
     end
 
     def all
-      result = self.model.call :get, self.to_query
+      result = self.model.call :get, {:query => self.to_query}
       return [] if result.nil?
       (result[:items] || []).map do |item|
         self.model.new item
@@ -122,7 +122,7 @@ module Magentwo
       self.all.map(&block)
     end
 
-    def each &block
+    def each(&block)
       raise ArgumentError, "no block given" unless block_given?
       self.all.each(&block)
     end

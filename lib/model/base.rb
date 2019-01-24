@@ -16,24 +16,16 @@ module Magentwo
       end
     end
 
-    def method_missing m, *args, &block
-      if custom_attr = self.custom_attributes[m]
-          return custom_attr
-      end
-
-      if extension_attr = self.extension_attributes[m]
-        return extension_attr
-      end
-      nil
+    def call method, path, query:nil
+      Magentwo::Base.call method, path, {:query => query}
     end
 
     class << self; attr_accessor :connection end
 
     class << self
       #args may container searchCriteria, fields, ...
-      def call method, query
-        model_name = "#{self.name.split("::").last.downcase}s"
-        Magentwo::Base.connection.call method, model_name, query
+      def call method, path="#{self.name.split("::").last.downcase}s", query:nil
+        Magentwo::Base.connection.call method, path, {:query => query}
       end
 
       def dataset
