@@ -7,7 +7,7 @@ module Magentwo
     end
 
     def with_extension_attributes
-      self.call :get, "customers/#{self.id}"
+      Magentwo::Customer.new( self.call :get, "customers/#{self.id}")
     end
 
     class << self
