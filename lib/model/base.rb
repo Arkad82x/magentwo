@@ -1,6 +1,8 @@
 module Magentwo
   class Base
-    DatasetMethods = %i(all filter exclude select fields first count fields info page order_by like)
+    DatasetMethods = %i(filter exclude select fields count fields info page order_by like)
+
+    attr_accessor :base_path
 
     def initialize args
       args.each do |key, value|
@@ -16,16 +18,45 @@ module Magentwo
       end
     end
 
-    def call method, path, query:nil
-      Magentwo::Base.call method, path, {:query => query}
+    def save
+      self.validate
+      response = self.connection.put ModelPath, self.to_h
+      self.class.new response
     end
 
-    class << self; attr_accessor :connection end
+    def delete
+      self.connection.delete ModelPath, self.to_h
+    end
+
+    def validate
+      true
+    end
+
+    def validate_presence attribute
+      raise ArgumentError, "#{attribute} must be set" if self.send(attribute).nil?
+      true
+    end
+
+    def call method, path, params
+      self.class.call method, path, params
+    end
 
     class << self
-      #args may container searchCriteria, fields, ...
-      def call method, path="#{self.name.split("::").last.downcase}s", query:nil
-        Magentwo::Base.connection.call method, path, {:query => query}
+      attr_accessor :connection
+
+      def base_path
+        "#{self.name.split(/::/).last.downcase}s"
+      end
+
+      def all
+        self.get(self.dataset.to_query)
+        .map do |item|
+          self.new item
+        end
+      end
+
+      def first
+        self.new self.get(self.dataset.page(1, 1).to_query).first
       end
 
       def dataset
@@ -36,6 +67,19 @@ module Magentwo
         define_method name do |*args|
           return dataset.send(name, *args)
         end
+      end
+
+      def get query, path:self.base_path, meta_data:false
+        case meta_data
+        when true then self.call :get_with_meta_data, path, query
+        when false then self.call :get, path, query
+        else
+          raise ArgumentError "unknown meta_data param, expected bool value. got: #{meta_data}"
+        end
+      end
+
+      def call method, path=self.base_path, params
+          Magentwo::Base.connection.send(method, path, params)
       end
     end
   end

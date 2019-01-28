@@ -17,7 +17,6 @@ module Magentwo
     end
 
     def request_token
-      p self
       Net::HTTP.start(self.host,self.port) do |http|
         req = Net::HTTP::Post.new("#{base_path}/integration/admin/token")
         req.body = {:username=> self.user, :password=> self.password}.to_json
@@ -27,32 +26,45 @@ module Magentwo
       end
     end
 
-    def call method, path, query:nil
-      url = "#{base_path}/#{path}?#{query}"
-      case method
-      when :get then self.get url
-      when :post then self.post url
-      when :delete then self.delete url
-      when :put then self.put url
-      else
-        raise "unknown http method, cannot call #{method}, expected :get, :post, :delete or :put"
+    def delete path, data
+      Magentwo.logger.info "DELETE #{path}"
+      Magentwo.logger.debug "DATA #{data}"
+
+      Magentwo.logger.warn "not implemented"
+
+    end
+
+    def put path, data
+      Magentwo.logger.info "PUT #{host}/#{base_path}/#{path}"
+      Magentwo.logger.debug "DATA #{data}"
+      url = "#{base_path}/#{path}"
+      Net::HTTP.start(self.host,self.port) do |http|
+        req = Net::HTTP::Put.new(url)
+        req["Authorization"] = "Bearer #{self.token}"
+        req['Content-Type'] = "application/json"
+        resp = http.request(req)
+        handle_response resp
       end
     end
 
-    def delete
-
+    def post path, data
+      Magentwo.logger.info "POST #{host}/#{path}"
+      Magentwo.logger.debug "DATA #{data}"
+      url = "#{base_path}/#{path}"
+      Net::HTTP.start(self.host,self.port) do |http|
+        req = Net::HTTP::Post.new(url)
+        req["Authorization"] = "Bearer #{self.token}"
+        req['Content-Type'] = "application/json"
+        req.body = data.to_json
+        resp = http.request(req)
+        handle_response resp
+      end
     end
 
-    def put
 
-    end
-
-    def post
-
-    end
-
-    def get url
-      p "get: #{url}"
+    def get_with_meta_data path, query
+      Magentwo.logger.info "GET #{host}#{base_path}/#{path}?#{query}"
+      url = "#{base_path}/#{path}?#{query}"
       Net::HTTP.start(self.host,self.port) do |http|
         req = Net::HTTP::Get.new(url)
         req["Authorization"] = "Bearer #{self.token}"
@@ -60,6 +72,13 @@ module Magentwo
         resp = http.request(req)
         handle_response resp
       end
+    end
+
+    def get path, query
+      Magentwo.logger.warn "not implemented"
+      response = get_with_meta_data(path, query)
+      return response if response[:items].nil?
+      return response[:items]
     end
 
     private

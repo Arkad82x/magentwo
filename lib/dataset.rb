@@ -1,5 +1,7 @@
 module Magentwo
   class Dataset
+    DefaultPageSize = 20
+
     attr_accessor :model, :opts
     def initialize model, opts=nil
       self.model = model
@@ -7,9 +9,10 @@ module Magentwo
         :filters => [],
         :pagination => {
           :current_page => Filter::CurrentPage.new(1),
-          :page_size => Filter::PageSize.new(20)
+          :page_size => Filter::PageSize.new(DefaultPageSize)
         },
-        :ordering => []
+        :ordering => [],
+        :fields => nil
       }
     end
 
@@ -39,7 +42,7 @@ module Magentwo
     end
 
     def select *fields
-      Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + [Filter::Fields.new(fields)])
+      Dataset.new self.model, self.opts.merge(:fields => Filter::Fields.new(fields))
     end
 
     def like args
@@ -49,7 +52,7 @@ module Magentwo
     #################
     # Pagination
     ################
-    def page page, page_size=20
+    def page page, page_size=DefaultPageSize
       Dataset.new self.model, self.opts.merge(:pagination => {:current_page => Filter::CurrentPage.new(page), :page_size => Filter::PageSize.new(page_size)})
     end
 
@@ -64,7 +67,7 @@ module Magentwo
     # Fetching
     ################
     def info
-      result = self.model.call :get, {:query => self.page(1, 1).to_query}
+      result = self.model.get self.page(1, 1).to_query, {:meta_data => true}
       {
         :fields => result[:items]&.first&.keys,
         :total_count => result[:total_count]
@@ -80,16 +83,11 @@ module Magentwo
     end
 
     def first
-      result = self.model.call :get, {:query => self.page(1, 1).to_query}
-      self.model.new result[:items].first
+      self.model.first
     end
 
     def all
-      result = self.model.call :get, {:query => self.to_query}
-      return [] if result.nil?
-      (result[:items] || []).map do |item|
-        self.model.new item
-      end
+      self.model.all
     end
 
     #################
@@ -110,6 +108,8 @@ module Magentwo
         self.opts[:ordering]
         .map { |opt, idx| opt.to_query(idx) }
         .join("&"),
+
+        self.opts[:fields]? self.opts[:fields].to_query() : ""
       ].reject(&:empty?)
       .join("&")
     end
@@ -119,12 +119,12 @@ module Magentwo
     ################
     def map(&block)
       raise ArgumentError, "no block given" unless block_given?
-      self.all.map(&block)
+      self.model.all.map(&block)
     end
 
     def each(&block)
       raise ArgumentError, "no block given" unless block_given?
-      self.all.each(&block)
+      self.model.all.each(&block)
     end
   end
 end

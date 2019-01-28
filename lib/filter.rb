@@ -98,7 +98,7 @@ module Magentwo
       end
       def to_query idx=nil
         #TODO api supports nested field selection e.g. items[address[street]]
-        "fields=items[#{URI::encode(self.fields.join(","))}]"
+        "fields=items[#{URI::encode(self.fields.map(&:to_s).join(","))}]"
       end
     end
   end
