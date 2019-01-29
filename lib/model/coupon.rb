@@ -8,12 +8,20 @@ module Magentwo
         "#{super}/search"
       end
 
-
-      def generate params
-        Magentwo::Validator.check_presence params, :rule_id, :quantity, :length
-        Magentwo::Validator.one_of params[:format], :num, :alpha, :alphanum, "", nil
-        Magentwo::Validator.set_if_unset params, :format, :alpha
-        self.call :post, "coupons/generate", {:couponSpec => params}
+      def generate rule_id, quantity:1, length:16, format:(:alpha), delimiter:"-", delimiter_at_every:4
+        format = format.to_sym
+        Magentwo::Validator.one_of format, :num, :alpha, :alphanum
+        self.call :post, "coupons/generate",
+        {
+          :couponSpec => {
+           :rule_id => rule_id,
+           :quantity => quantity,
+           :length => length,
+           :format => format,
+           :delimiter => delimiter,
+           :delimiter_at_every => delimiter_at_every
+          }
+        }
       end
     end
 
