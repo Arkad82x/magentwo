@@ -32,9 +32,8 @@ module Magentwo
       true
     end
 
-    def validate_presence attribute
-      raise ArgumentError, "#{attribute} must be set" if self.send(attribute).nil?
-      true
+    def check_presence *attributes
+      Magentwo::Validator.check_presence self, attributes
     end
 
     def call method, path, params
@@ -48,15 +47,15 @@ module Magentwo
         "#{self.name.split(/::/).last.downcase}s"
       end
 
-      def all
-        self.get(self.dataset.to_query)
+      def all ds=self.dataset
+        self.get(ds.to_query)
         .map do |item|
           self.new item
         end
       end
 
-      def first
-        self.new self.get(self.dataset.page(1, 1).to_query).first
+      def first ds=self.dataset
+        self.new self.get(ds.page(1, 1).to_query).first
       end
 
       def dataset

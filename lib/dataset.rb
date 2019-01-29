@@ -83,11 +83,11 @@ module Magentwo
     end
 
     def first
-      self.model.first
+      self.model.first self
     end
 
     def all
-      self.model.all
+      self.model.all self
     end
 
     #################
