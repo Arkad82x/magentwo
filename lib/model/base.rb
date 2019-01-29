@@ -11,7 +11,7 @@ module Magentwo
           instance_variable_set key_sym, value
         end
       end
-      if self.respond_to? :custom_attributes
+      if self.respond_to?(:custom_attributes) && args[:custom_attributes]
         self.custom_attributes = args[:custom_attributes].map do |attr|
           Hash[attr[:attribute_code].to_sym, attr[:value]]
         end.inject(&:merge)
