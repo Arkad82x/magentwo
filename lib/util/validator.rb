@@ -19,6 +19,12 @@ module Magentwo
       def one_of value, *valid_values
         raise ArgumentError, "value #{value} invalid, expected one of #{valid_values}" unless valid_values.include?value
       end
+
+      def set_if_unset hash, key, default_value
+        if(hash[key].nil?)
+          hash.merge(key:default_value)
+        end 
+      end
     end
   end
 end
