@@ -4,7 +4,7 @@ module Magentwo
     Attributes.each do |attr| attr_accessor attr end
 
     def with_extension_attributes
-      self.class.new (self.class.get nil, path:"customers/#{self.id}")
+      self.class.new (self.class.get nil, path:"#{self.class.base_path}/#{self.id}")
     end
 
     def validate
