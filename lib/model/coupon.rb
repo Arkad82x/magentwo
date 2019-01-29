@@ -9,6 +9,7 @@ module Magentwo
       end
 
       def generate params
+        Magentwo::Validator.check_presence params, :rule_id, :quantity, :format, :length
         self.call :post, "coupons/generate", params
       end
     end

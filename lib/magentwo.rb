@@ -16,11 +16,15 @@ module Magentwo
   def self.logger
     @@logger ||= Logger.new STDOUT, {:level => Logger::DEBUG}
   end
+
+
 end
 
 require_relative 'connection.rb'
 require_relative 'filter.rb'
 require_relative 'dataset.rb'
+require_relative 'util/validator.rb'
+
 Magentwo::Models.each do |file_name|
 	require_relative("model/#{file_name}.rb")
 end
