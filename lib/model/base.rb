@@ -20,12 +20,12 @@ module Magentwo
 
     def save
       self.validate
-      response = self.connection.put ModelPath, self.to_h
+      response = self.connection.put self.class.base_path, self.to_h
       self.class.new response
     end
 
     def delete
-      self.connection.delete ModelPath, self.to_h
+      self.connection.delete self.class.base_path, self.to_h
     end
 
     def validate
