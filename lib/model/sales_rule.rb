@@ -4,8 +4,8 @@ module Magentwo
     Attributes.each do |attr| attr_accessor attr end
 
     class << self
-      def base_path
-        "salesRules/search"
+      def get_path
+        "#{base_path}/search"
       end
     end
 

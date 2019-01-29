@@ -8,13 +8,13 @@ module Magentwo
     end
 
     def validate
-      validate_presence :email
-      super.validate
+      check_presence :email
+      super
     end
 
     class << self
-      def base_path
-        "#{super}/search"
+      def get_path
+        "search"
       end
     end
   end

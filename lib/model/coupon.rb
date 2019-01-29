@@ -4,8 +4,8 @@ module Magentwo
     Attributes.each do |attr| attr_accessor attr end
 
     class << self
-      def base_path
-        "#{super}/search"
+      def get_path
+        "#{base_path}/search"
       end
 
       def generate rule_id, quantity:1, length:16, format:(:alpha), delimiter:"-", delimiter_at_every:4

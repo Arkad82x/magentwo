@@ -20,7 +20,7 @@ module Magentwo
 
     def save
       self.validate
-      response = self.connection.put self.class.base_path, self.to_h
+      response = Magentwo::Base.call :put, "customer", self
       self.class.new response
     end
 
@@ -33,7 +33,7 @@ module Magentwo
     end
 
     def check_presence *attributes
-      Magentwo::Validator.check_presence self, attributes
+      Magentwo::Validator.check_presence self, *attributes
     end
 
     def call method, path, params
@@ -44,7 +44,12 @@ module Magentwo
       attr_accessor :connection
 
       def base_path
-        "#{self.name.split(/::/).last.downcase}s"
+        name = self.name.split(/::/).last
+        "#{name[0,1].downcase}#{name[1..-1]}s"
+      end
+
+      def get_path
+        base_path
       end
 
       def all ds=self.dataset
@@ -68,7 +73,7 @@ module Magentwo
         end
       end
 
-      def get query, path:self.base_path, meta_data:false
+      def get query, path:self.get_path, meta_data:false
         case meta_data
         when true then self.call :get_with_meta_data, path, query
         when false then self.call :get, path, query
