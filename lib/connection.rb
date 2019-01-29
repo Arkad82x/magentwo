@@ -42,6 +42,7 @@ module Magentwo
         req = Net::HTTP::Put.new(url)
         req["Authorization"] = "Bearer #{self.token}"
         req['Content-Type'] = "application/json"
+        req.body = data
         resp = http.request(req)
         handle_response resp
       end
@@ -75,9 +76,8 @@ module Magentwo
     end
 
     def get path, query
-      Magentwo.logger.warn "not implemented"
       response = get_with_meta_data(path, query)
-      return response if response[:items].nil?
+      return response unless response[:items]
       return response[:items]
     end
 
