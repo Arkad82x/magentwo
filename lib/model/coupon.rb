@@ -8,9 +8,11 @@ module Magentwo
         "#{super}/search"
       end
 
+
       def generate params
         Magentwo::Validator.check_presence params, :rule_id, :quantity, :format, :length
-        self.call :post, "coupons/generate", params
+        Magentwo::Validator.one_of params[:format], :num, :alpha, :alphanum, ""
+        self.call :post, "coupons/generate", {:couponSpec => params}
       end
     end
 
