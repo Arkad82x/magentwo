@@ -6,7 +6,7 @@ require 'logger'
 module Magentwo
   Models = %w(base product customer order coupon sales_rule)
   def self.connect host, user_name, password
-    Base.connection = Connection.new host, user_name, password
+    Base.adapter = Adapter.new host, user_name, password
   end
 
   def self.logger= logger
@@ -21,6 +21,7 @@ module Magentwo
 end
 
 require_relative 'connection.rb'
+require_relative 'adapter.rb'
 require_relative 'filter.rb'
 require_relative 'dataset.rb'
 require_relative 'util/validator.rb'

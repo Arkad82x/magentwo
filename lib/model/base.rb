@@ -20,12 +20,12 @@ module Magentwo
 
     def save
       self.validate
-      response = Magentwo::Base.call :put, "#{self.class.base_path}/#{self.id}", self.to_json
+      response = Magentwo::Base.call :put, "#{self.class.base_path}/#{self.id}", self
       self.class.new response
     end
 
     def delete
-      self.connection.delete self.class.base_path, self.to_h
+      Magentwo.logger.warn "not implemented"
     end
 
     def validate
@@ -53,7 +53,7 @@ module Magentwo
     end
 
     class << self
-      attr_accessor :connection
+      attr_accessor :adapter
 
       def lower_case_name
         name = self.name.split(/::/).last
@@ -99,7 +99,7 @@ module Magentwo
       end
 
       def call method, path=self.base_path, params
-          Magentwo::Base.connection.send(method, path, params)
+          Magentwo::Base.adapter.call(method, path, params)
       end
 
     end

@@ -43,8 +43,7 @@ module Magentwo
         req["Authorization"] = "Bearer #{self.token}"
         req['Content-Type'] = "application/json"
         req.body = data
-        resp = http.request(req)
-        handle_response resp
+        http.request(req)
       end
     end
 
@@ -56,37 +55,20 @@ module Magentwo
         req = Net::HTTP::Post.new(url)
         req["Authorization"] = "Bearer #{self.token}"
         req['Content-Type'] = "application/json"
-        req.body = data.to_json
-        resp = http.request(req)
-        handle_response resp
+        req.body = data
+        http.request(req)
       end
     end
 
 
-    def get_with_meta_data path, query
+    def get path, query
       Magentwo.logger.info "GET #{host}#{base_path}/#{path}?#{query}"
       url = "#{base_path}/#{path}?#{query}"
       Net::HTTP.start(self.host,self.port) do |http|
         req = Net::HTTP::Get.new(url)
         req["Authorization"] = "Bearer #{self.token}"
         req['Content-Type'] = "application/json"
-        resp = http.request(req)
-        handle_response resp
-      end
-    end
-
-    def get path, query
-      response = get_with_meta_data(path, query)
-      return response unless response[:items]
-      return response[:items]
-    end
-
-    private
-    def handle_response response
-      case response.code
-      when "200" then JSON.parse response.body, :symbolize_names => true
-      else
-        raise "request failed #{response.code} #{response.body}"
+        http.request(req)
       end
     end
   end
