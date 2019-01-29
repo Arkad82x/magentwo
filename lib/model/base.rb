@@ -43,7 +43,16 @@ module Magentwo
     def to_h
       self.instance_variables.map do |k|
         key = k.to_s[1..-1] #symbol to string and remove @ in front
-        [key, self.send(key)]
+        if key == "custom_attributes"
+          [
+            key,
+            self.send(key).map do |k, v|
+              {:attribute_code => k, :value => v}
+            end
+          ]
+        else
+          [key, self.send(key)]
+        end
       end
       .to_h
     end
