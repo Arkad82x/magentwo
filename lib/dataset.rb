@@ -1,7 +1,5 @@
 module Magentwo
   class Dataset
-    DefaultPageSize = 20
-
     attr_accessor :model, :opts
     def initialize model, opts=nil
       self.model = model
@@ -9,7 +7,7 @@ module Magentwo
         :filters => [],
         :pagination => {
           :current_page => Filter::CurrentPage.new(1),
-          :page_size => Filter::PageSize.new(DefaultPageSize)
+          :page_size => Filter::PageSize.new(Magentwo.default_page_size)
         },
         :ordering => [],
         :fields => nil
@@ -52,7 +50,7 @@ module Magentwo
     #################
     # Pagination
     ################
-    def page page, page_size=DefaultPageSize
+    def page page, page_size=Magentwo.default_page_size
       Dataset.new self.model, self.opts.merge(:pagination => {:current_page => Filter::CurrentPage.new(page), :page_size => Filter::PageSize.new(page_size)})
     end
 

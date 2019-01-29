@@ -17,6 +17,14 @@ module Magentwo
     @@logger ||= Logger.new STDOUT, {:level => Logger::DEBUG}
   end
 
+  def self.default_page_size
+    @@default_page_size ||= 20
+  end
+
+  def self.default_page_size= page_size
+    @@default_page_size = page_size
+  end
+
 
 end
 
