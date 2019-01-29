@@ -5,11 +5,11 @@ module Magentwo
         case model
         when Hash
           attributes.each do |attribute|
-            raise ArgumentError, "#{attribute} must be set" if model[attribute].nil?
+            raise ArgumentError, "#{attribute} must be set" unless model[attribute]
           end
         when Magentwo::Base
           attributes.each do |attribute|
-            raise ArgumentError, "#{attribute} must be set" if model.send(attribute).nil?
+            raise ArgumentError, "#{attribute} must be set" unless model.send(attribute)
           end
         else
           raise ArgumentError, "unknown model type, expected Child of Magentwo::Base or Hash"
@@ -18,12 +18,6 @@ module Magentwo
 
       def one_of value, *valid_values
         raise ArgumentError, "value #{value} invalid, expected one of #{valid_values}" unless valid_values.include?value
-      end
-
-      def set_if_unset hash, key, default_value
-        if(hash[key].nil?)
-          hash.merge(key:default_value)
-        end 
       end
     end
   end
