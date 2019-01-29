@@ -20,7 +20,7 @@ module Magentwo
 
     def save
       self.validate
-      response = Magentwo::Base.call :put, "customer", self
+      response = Magentwo::Base.call :put, "#{self.class.base_path}/#{self.id}", self.to_json
       self.class.new response
     end
 
@@ -40,12 +40,28 @@ module Magentwo
       self.class.call method, path, params
     end
 
+    def to_h
+      self.instance_variables.map do |k|
+        key = k.to_s[1..-1] #symbol to string and remove @ in front
+        [key, self.send(key)]
+      end
+      .to_h
+    end
+
+    def to_json
+      Hash[self.class.lower_case_name, self.to_h].to_json
+    end
+
     class << self
       attr_accessor :connection
 
-      def base_path
+      def lower_case_name
         name = self.name.split(/::/).last
-        "#{name[0,1].downcase}#{name[1..-1]}s"
+        "#{name[0,1].downcase}#{name[1..-1]}"
+      end
+
+      def base_path
+        "#{lower_case_name}s"
       end
 
       def get_path
@@ -85,6 +101,7 @@ module Magentwo
       def call method, path=self.base_path, params
           Magentwo::Base.connection.send(method, path, params)
       end
+
     end
   end
 end
