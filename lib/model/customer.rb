@@ -14,7 +14,7 @@ module Magentwo
 
     class << self
       def get_path
-        "search"
+        "#{base_path}/search"
       end
     end
   end
