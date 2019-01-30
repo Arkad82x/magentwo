@@ -7,6 +7,10 @@ module Magentwo
       Magentwo::Coupon.generate self.rule_id, quantity:quantity, length:length, format:format, delimiter:delimiter, delimiter_at_every:delimiter_at_every
     end
 
+    def coupons
+      Magentwo::Coupon.filter(:rule_id => self.rule_id).all
+    end
+
 
     class << self
       def get_path
