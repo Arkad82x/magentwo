@@ -18,9 +18,9 @@ describe Magentwo::Dataset do
       expect(dataset.opts[:pagination]).to have_key :current_page
       expect(dataset.opts[:pagination]).to have_key :page_size
     end
-    it "requests #{Magentwo::Dataset::DefaultPageSize} items on default" do
+    it "requests all items on default" do
       expect(initial_query).to include "searchCriteria[current_page]=1"
-      expect(initial_query).to include "searchCriteria[page_size]=#{Magentwo::Dataset::DefaultPageSize}"
+      expect(initial_query).to include "searchCriteria[page_size]=0"
     end
   end
 

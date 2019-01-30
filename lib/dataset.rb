@@ -7,7 +7,7 @@ module Magentwo
         :filters => [],
         :pagination => {
           :current_page => Filter::CurrentPage.new(1),
-          :page_size => Filter::PageSize.new(Magentwo.default_page_size)
+          :page_size => Filter::PageSize.new(0)
         },
         :ordering => [],
         :fields => nil
