@@ -88,6 +88,18 @@ module Magentwo
         self.new self.get(ds.page(1, 1).to_query).first
       end
 
+      def each_page page_size=Magentwo.default_page_size, &block
+        self.dataset.each_page page_size, &block
+      end
+
+      def each &block
+        self.dataset.each &block
+      end
+
+      def map &block
+        self.dataset.map &block
+      end
+
       def dataset
         Magentwo::Dataset.new(self)
       end

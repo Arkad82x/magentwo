@@ -124,5 +124,20 @@ module Magentwo
       raise ArgumentError, "no block given" unless block_given?
       self.model.all.each(&block)
     end
+
+    def each_page page_size=Magentwo.default_page_size, &block
+      raise ArgumentError, "no block given" unless block_given?
+
+      received_element_count = page_size
+      current_page = 1
+      while(received_element_count == page_size) do
+        page = self.page(current_page, page_size).all
+
+        block.call(page)
+
+        received_element_count = page.count
+        current_page += 1
+      end
+    end
   end
 end
