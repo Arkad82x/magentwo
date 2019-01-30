@@ -10,7 +10,7 @@ module Magentwo
       def to_query idx
         [
         "searchCriteria[filter_groups][#{idx}][filters][0][field]=#{self.field}",
-        "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{URI::encode(self.value)}",
+        "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{URI::encode(self.value.to_s)}",
         "searchCriteria[filter_groups][#{idx}][filters][0][condition_type]=#{self.class.name.split("::").last.downcase}"]
         .join("&")
       end
@@ -20,7 +20,7 @@ module Magentwo
       def to_query idx
         [
         "searchCriteria[filter_groups][#{idx}][filters][0][field]=#{self.field}",
-        "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{URI::encode(self.value.join(","))}",
+        "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{URI::encode(self.value.join(",").map(&:to_s))}",
         "searchCriteria[filter_groups][#{idx}][filters][0][condition_type]=#{self.class.name.split("::").last.downcase}"]
         .join("&")
       end
