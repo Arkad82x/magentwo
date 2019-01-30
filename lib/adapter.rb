@@ -15,7 +15,7 @@ module Magentwo
       when :get_with_meta_data, :put, :post, :delete then transform( parse( response))
       when :get
         parsed = parse(response)
-        if parsed[:items]
+        if parsed.is_a?(Hash) && parsed[:items]
           parsed[:items].map do |item|
             transform item
           end
