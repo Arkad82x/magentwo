@@ -2,8 +2,6 @@ module Magentwo
   class Base
     DatasetMethods = %i(filter exclude select fields count fields info page order_by like)
 
-    attr_accessor :base_path
-
     def initialize args
       args.each do |key, value|
         key_sym = :"@#{key}"
