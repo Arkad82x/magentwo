@@ -7,10 +7,6 @@ module Magentwo
       def types
         Magentwo::Base.get nil, path:"#{base_path}/types"
       end
-
-      def [] sku
-        Magentwo::Base.get nil, path:"#{base_path}/#{sku}"
-      end
     end
   end
 end
