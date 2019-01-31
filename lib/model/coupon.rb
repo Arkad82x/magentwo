@@ -11,7 +11,7 @@ module Magentwo
       def generate rule_id, quantity:1, length:16, format:(:alpha), delimiter:"-", delimiter_at_every:4
         format = format.to_sym
         Magentwo::Validator.one_of format, :num, :alpha, :alphanum
-        self.call :post, "coupons/generate",
+        self.call :post, "#{base_path}/generate",
         {
           :couponSpec => {
            :rule_id => rule_id,
