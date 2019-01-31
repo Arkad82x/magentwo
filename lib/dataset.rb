@@ -18,21 +18,22 @@ module Magentwo
     # Filters
     ################
     def filter hash_or_other, invert:false
-      filter = case hash_or_other
+      filters = case hash_or_other
       when Hash
         raise ArgumentError, "empty hash supplied" if hash_or_other.empty?
-        key, value = hash_or_other.first
-        klass = case value
-        when Array
-          invert ? Filter::Nin : Filter::In
-        else
-          invert ? Filter::Neq : Filter::Eq
+        hash_or_other.map do |key, value|
+          klass = case value
+          when Array
+            invert ? Filter::Nin : Filter::In
+          else
+            invert ? Filter::Neq : Filter::Eq
+          end
+          klass.new(key, value)
         end
-        klass.new(key, value)
       else
         raise ArgumentError, "filter function expects Hash as input"
       end
-      Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + [filter])
+      Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + filters)
     end
 
     def exclude args

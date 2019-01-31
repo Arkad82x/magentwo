@@ -40,6 +40,8 @@ describe Magentwo::Dataset do
   context "multi filter" do
     let(:multi_filter_ds) {dataset.filter(:name => "foobar").filter(:id => 42)}
     let(:multi_filter_query) {multi_filter_ds.to_query}
+    let(:multi_filter_in_one_ds) {dataset.filter(:name => "foobar", :id => 42)}
+    let(:multi_filter_in_one_query) {multi_filter_in_one_ds.to_query}
     it "contains filter with type Filter::Eq" do
       expect(multi_filter_ds.opts[:filters]).to include Magentwo::Filter::Eq
     end
@@ -53,6 +55,10 @@ describe Magentwo::Dataset do
       expect(multi_filter_query).to include "searchCriteria[filter_groups][1][filters][0][field]=id"
       expect(multi_filter_query).to include "searchCriteria[filter_groups][1][filters][0][condition_type]=eq"
       expect(multi_filter_query).to include "searchCriteria[filter_groups][1][filters][0][value]=42"
+    end
+    it "is the same for multiple keys in one filter" do
+      expect(multi_filter_ds.opts.count).to eq multi_filter_in_one_ds.opts.count
+      expect(multi_filter_query).to eq multi_filter_in_one_query
     end
   end
 
