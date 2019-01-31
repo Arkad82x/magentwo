@@ -37,6 +37,25 @@ describe Magentwo::Dataset do
     end
   end
 
+  context "multi filter" do
+    let(:multi_filter_ds) {dataset.filter(:name => "foobar").filter(:id => 42)}
+    let(:multi_filter_query) {multi_filter_ds.to_query}
+    it "contains filter with type Filter::Eq" do
+      expect(multi_filter_ds.opts[:filters]).to include Magentwo::Filter::Eq
+    end
+    it "contains two filters" do
+      expect(multi_filter_ds.opts[:filters].count).to eq 2
+    end
+    it "compute query" do
+      expect(multi_filter_query).to include "searchCriteria[filter_groups][0][filters][0][field]=name"
+      expect(multi_filter_query).to include "searchCriteria[filter_groups][0][filters][0][condition_type]=eq"
+      expect(multi_filter_query).to include "searchCriteria[filter_groups][0][filters][0][value]=foobar"
+      expect(multi_filter_query).to include "searchCriteria[filter_groups][1][filters][0][field]=id"
+      expect(multi_filter_query).to include "searchCriteria[filter_groups][1][filters][0][condition_type]=eq"
+      expect(multi_filter_query).to include "searchCriteria[filter_groups][1][filters][0][value]=42"
+    end
+  end
+
   context "select" do
     let(:name_select_ds) {dataset.select(:name)}
     let(:name_select_query) {name_select_ds.to_query}
