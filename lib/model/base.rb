@@ -64,6 +64,10 @@ module Magentwo
     class << self
       attr_accessor :adapter
 
+      def [] unique_identifier
+        self.new (Magentwo::Base.get nil, path:"#{base_path}/#{unique_identifier}")
+      end
+
       def lower_case_name
         name = self.name.split(/::/).last
         "#{name[0,1].downcase}#{name[1..-1]}"
