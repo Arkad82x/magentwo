@@ -47,8 +47,6 @@ module Magentwo
 
     def date_transform item
       DateFields.each do |date_field|
-        p date_field, item
-        p date_field, item[date_field]
         item[date_field] = Time.new item[date_field] if item[date_field]
       end
       item
