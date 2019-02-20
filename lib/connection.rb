@@ -2,27 +2,26 @@ module Magentwo
   class Connection
     attr_accessor :host, :port, :user, :password, :token, :base_path
 
-    def initialize host, user, password, base_path:nil
-      if host.include? ":"
-        @host = host.split(":").first
-        @port = host.split(":").last.to_i
-      else
-        @host = host
-        @port = 80
-      end
+    def initialize uri, user, password, base_path:nil
+      uri = URI(uri)
+      @host = uri.host
+      @port = uri.port
       @user = user
       @password = password
-      @base_path = base_path || "/rest/default/V1"
+      @base_path = base_path || "/rest/V1"
       request_token
     end
 
     def request_token
       Net::HTTP.start(self.host,self.port) do |http|
-        req = Net::HTTP::Post.new("#{base_path}/integration/admin/token")
+        url = "#{base_path}/integration/admin/token"
+        Magentwo.logger.info "POST #{url}"
+        req = Net::HTTP::Post.new(url)
         req.body = {:username=> self.user, :password=> self.password}.to_json
         req['Content-Type'] = "application/json"
         req['Content-Length'] = req.body.length
-        @token = JSON.parse http.request(req).body
+        response = http.request(req).body
+        @token = JSON.parse response
       end
     end
 
