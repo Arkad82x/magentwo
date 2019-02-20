@@ -5,7 +5,7 @@ require 'logger'
 
 module Magentwo
   Models = %w(base product customer order coupon sales_rule category)
-  def self.connect host=nil, user_name=nil, password=nil, debug:false
+  def self.connect host=nil, user_name=nil, password=nil
     raise ArgumentError, "no host specified" unless host
     raise ArgumentError, "no user_name specified" unless user_name
     raise ArgumentError, "no password specified" unless password
@@ -28,14 +28,6 @@ module Magentwo
     @@default_page_size = page_size
   end
 
-  def self.debug_mode= debug_mode
-    @@debug_mode = debug_mode
-  end
-
-  def self.debug_mode
-    @@debug_mode ||= false
-  end
-
   def self.models
     Models.map do |model_file_name|
       model_file_name
@@ -48,7 +40,6 @@ end
 
 require_relative 'connection.rb'
 require_relative 'adapter.rb'
-require_relative 'debug_adapter.rb'
 require_relative 'filter.rb'
 require_relative 'dataset.rb'
 require_relative 'util/validator.rb'

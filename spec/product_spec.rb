@@ -3,7 +3,6 @@ require_relative '../lib/magentwo.rb'
 describe Magentwo::Product do
   before(:all) do
     Magentwo.logger = Logger.new STDOUT, {:level => Logger::ERROR}
-    Magentwo.connect "docker-magento2_web_1", "admin", "magentorocks1"
     @original_count = Magentwo::Product.count
   end
 
@@ -13,7 +12,7 @@ describe Magentwo::Product do
       expect(dataset).to be_a Magentwo::Dataset
     end
   end
-  
+
   context "#count" do
     let(:count) {Magentwo::Product.count}
     it "responds to :count" do
