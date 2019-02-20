@@ -122,7 +122,7 @@ module Magentwo
       end
 
       def call method, path=self.base_path, params
-          Magentwo::Base.adapter.call(method, path, params)
+        Magentwo::Base.adapter.call(method, path, params)
       end
 
     end
