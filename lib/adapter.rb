@@ -10,6 +10,7 @@ module Magentwo
       end
 
       response = self.send(http_method, path, params)
+      Magentwo.logger.debug response.body
 
       parsed_response = case method
       when :get_with_meta_data, :put, :post, :delete then transform( parse( response))
