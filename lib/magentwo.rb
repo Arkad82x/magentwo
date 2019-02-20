@@ -4,8 +4,11 @@ require 'json'
 require 'logger'
 
 module Magentwo
-  Models = %w(base product customer order coupon sales_rule)
-  def self.connect host, user_name, password
+  Models = %w(base product customer order coupon sales_rule category)
+  def self.connect host=nil, user_name=nil, password=nil, debug:false
+    raise ArgumentError, "no host specified" unless host
+    raise ArgumentError, "no user_name specified" unless user_name
+    raise ArgumentError, "no password specified" unless password
     Base.adapter = Adapter.new host, user_name, password
   end
 
@@ -14,7 +17,7 @@ module Magentwo
   end
 
   def self.logger
-    @@logger ||= Logger.new STDOUT, {:level => Logger::DEBUG}
+    @@logger ||= Logger.new STDOUT, {:level => Logger::INFO}
   end
 
   def self.default_page_size
@@ -25,11 +28,27 @@ module Magentwo
     @@default_page_size = page_size
   end
 
+  def self.debug_mode= debug_mode
+    @@debug_mode = debug_mode
+  end
 
+  def self.debug_mode
+    @@debug_mode ||= false
+  end
+
+  def self.models
+    Models.map do |model_file_name|
+      model_file_name
+      .split('_')
+      .map(&:capitalize)
+      .join
+    end
+  end
 end
 
 require_relative 'connection.rb'
 require_relative 'adapter.rb'
+require_relative 'debug_adapter.rb'
 require_relative 'filter.rb'
 require_relative 'dataset.rb'
 require_relative 'util/validator.rb'
