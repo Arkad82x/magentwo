@@ -90,7 +90,7 @@ end
 To update Models back to Magento 2 use the `save` method
 This switches the first and last name of the Customer Foo Bar
 ```
-customer = Magentwo::Customer.filter(:first_name => "Foo").filter(:last_name => "Bar").first
+customer = Magentwo::Customer.filter(:first_name => "Foo", :last_name => "Bar").first
 customer.firstname = "Bar"
 customer.lastname = "Foo"
 customer.save
