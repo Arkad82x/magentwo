@@ -40,6 +40,22 @@ module Magentwo
       filter args, invert:true
     end
 
+    def gt args
+      Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + [Filter::Gt.new(args.keys.first, args.values.first)])
+    end
+
+    def lt args
+      Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + [Filter::Lt.new(args.keys.first, args.values.first)])
+    end
+
+    def gteq args
+      Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + [Filter::Gteq.new(args.keys.first, args.values.first)])
+    end
+
+    def lteq args
+      Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + [Filter::Lteq.new(args.keys.first, args.values.first)])
+    end
+
     def select *fields
       Dataset.new self.model, self.opts.merge(:fields => Filter::Fields.new(fields))
     end

@@ -4,7 +4,7 @@ require 'json'
 require 'logger'
 
 module Magentwo
-  Models = %w(base product customer order coupon sales_rule category)
+  Models = %w(base product customer order coupon sales_rule category cart)
   def self.connect host=nil, user_name=nil, password=nil
     raise ArgumentError, "no host specified" unless host
     raise ArgumentError, "no user_name specified" unless user_name
@@ -17,7 +17,7 @@ module Magentwo
   end
 
   def self.logger
-    @@logger ||= Logger.new STDOUT, {:level => Logger::INFO}
+    @@logger ||= Logger.new STDOUT, {:level => Logger::DEBUG}
   end
 
   def self.default_page_size

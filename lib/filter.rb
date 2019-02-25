@@ -20,7 +20,7 @@ module Magentwo
       def to_query idx
         [
         "searchCriteria[filter_groups][#{idx}][filters][0][field]=#{self.field}",
-        "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{URI::encode(self.value.join(",").map(&:to_s))}",
+        "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{URI::encode(self.value.map(&:to_s).join(","))}",
         "searchCriteria[filter_groups][#{idx}][filters][0][condition_type]=#{self.class.name.split("::").last.downcase}"]
         .join("&")
       end
@@ -65,6 +65,18 @@ module Magentwo
     end
 
     class Like < Magentwo::Filter::Compare
+    end
+
+    class Gt < Magentwo::Filter::Compare
+    end
+
+    class Lt < Magentwo::Filter::Compare
+    end
+
+    class Gteq < Magentwo::Filter::Compare
+    end
+
+    class Lteq < Magentwo::Filter::Compare
     end
 
     class PageSize < Magentwo::Filter::Simple

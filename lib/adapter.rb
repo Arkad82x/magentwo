@@ -10,14 +10,13 @@ module Magentwo
       end
 
       response = self.send(http_method, path, params)
-      Magentwo.logger.debug response.body
-
+      Magentwo.logger.debug "Response body: #{response.body}"
       parsed_response = case method
       when :get_with_meta_data, :put, :post, :delete then transform( parse( response))
       when :get
         parsed = parse(response)
-        if parsed.is_a?(Hash) && parsed[:items]
-          parsed[:items].map do |item|
+        if parsed.is_a?(Hash) && (parsed.has_key? :items)
+          (parsed[:items] || []).map do |item|
             transform item
           end
         else

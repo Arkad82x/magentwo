@@ -1,6 +1,6 @@
 module Magentwo
   class Base
-    DatasetMethods = %i(filter exclude select fields count fields info page order_by like)
+    DatasetMethods = %i(filter exclude select fields count fields info page order_by like gt lt gteq lteq)
 
     def initialize args
       args.each do |key, value|
