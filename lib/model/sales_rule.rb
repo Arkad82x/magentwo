@@ -16,6 +16,10 @@ module Magentwo
       def get_path
         "#{base_path}/search"
       end
+
+      def unique_identifier
+        :rule_id
+      end
     end
 
   end

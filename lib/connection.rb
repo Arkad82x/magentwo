@@ -26,11 +26,17 @@ module Magentwo
     end
 
     def delete path, data
-      Magentwo.logger.info "DELETE #{path}"
+      Magentwo.logger.info "DELETE #{host}/#{base_path}/#{path}"
       Magentwo.logger.debug "DATA #{data}"
 
-      Magentwo.logger.warn "not implemented"
-
+      url = "#{base_path}/#{path}"
+      Net::HTTP.start(self.host,self.port) do |http|
+        req = Net::HTTP::Delete.new(url)
+        req["Authorization"] = "Bearer #{self.token}"
+        req['Content-Type'] = "application/json"
+        req.body = data
+        http.request(req)
+      end
     end
 
     def put path, data

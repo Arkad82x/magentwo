@@ -7,6 +7,10 @@ module Magentwo
       def types
         Magentwo::Base.get nil, path:"#{base_path}/types"
       end
+
+      def unique_identifier
+        :sku
+      end
     end
   end
 end

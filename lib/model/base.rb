@@ -18,12 +18,12 @@ module Magentwo
 
     def save
       self.validate
-      response = Magentwo::Base.call :put, "#{self.class.base_path}/#{self.id}", self
+      response = Magentwo::Base.call :put, "#{self.class.base_path}/#{self.send(self.class.unique_identifier)}", self
       self.class.new response
     end
 
     def delete
-      Magentwo.logger.warn "not implemented"
+      Magentwo::Base.call :delete, "#{self.class.base_path}/#{self.send(self.class.unique_identifier)}", nil
     end
 
     def validate
@@ -62,8 +62,12 @@ module Magentwo
     class << self
       attr_accessor :adapter
 
-      def [] unique_identifier
-        self.new (Magentwo::Base.get nil, path:"#{base_path}/#{unique_identifier}")
+      def [] unique_identifier_value
+        self.new (Magentwo::Base.get nil, path:"#{base_path}/#{unique_identifier_value}")
+      end
+
+      def unique_identifier
+        :id
       end
 
       def lower_case_name

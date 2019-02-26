@@ -23,6 +23,10 @@ module Magentwo
           }
         }
       end
+
+      def unique_identifier
+        :coupon_id
+      end
     end
 
   end

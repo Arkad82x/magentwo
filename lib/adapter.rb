@@ -10,9 +10,10 @@ module Magentwo
       end
 
       response = self.send(http_method, path, params)
-      Magentwo.logger.debug "Response body: #{response.body}"
+      Magentwo.logger.debug "Response body: #{response.body}" unless response.is_a? TrueClass
+
       parsed_response = case method
-      when :get_with_meta_data, :put, :post, :delete then transform( parse( response))
+      when :get_with_meta_data, :put, :post then transform( parse( response))
       when :get
         parsed = parse(response)
         if parsed.is_a?(Hash) && (parsed.has_key? :items)
@@ -22,6 +23,7 @@ module Magentwo
         else
           transform parsed
         end
+      when :delete
       else
         raise ArgumentError, "unknown method type. Expected :get, :get_with_meta_data, :post, :put or :delete. #{method} #{path}"
       end

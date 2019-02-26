@@ -19,6 +19,11 @@ module Magentwo
       def [] unique_identifier
         self.filter(:entity_id => unique_identifier).first
       end
+
+      def unique_identifier
+        Magentwo::Logger.error "orders do not container id on default requests, therefore they cannot be targeted on the API"
+        nil
+      end
     end
   end
 end
