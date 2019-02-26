@@ -148,6 +148,7 @@ module Magentwo
 
     def to_query
       self.validate
+      ds = self
       [
         ds.opts[:filters]
         .each_with_index
