@@ -67,11 +67,16 @@ Look for all Products whose name includes the word "Computer"
 Magentwo::Product.like(:name => "%Computer%").all
 ```
 
-Compare using `gt`, `gteq`, `lt` or `lteq`.
+Compare using `gt`, `gteq`, `lt` or `lteq`. These methods do not seem to work with dates, please use `from` and `to` when e.g. trying to fetch all Products that changed within a certain period.
 ```
-Magentwo::Product.lt(:updated_at => Time.new).all
+Magentwo::Product.lt(:price => 42).all
 Magentwo::Product.gt(:id => 1337).first
-Magentwo::Product.gteq(:created_at => Time.new(2018, 1, 1)).lteq(:created_at => Time.new(2018, 12, 31)).all
+```
+
+Compare using `from` and `to`, you may also use both to specify a range.
+```
+Magentwo::Product.from(:updated_at => Time.new(2019, 1, 1).all
+Magentwo::Product.to(:created_at => Time.new(2019, 2, 1).all
 ```
 
 All of these filter-functions can be chained as needed
@@ -102,13 +107,13 @@ end
 ```
 You may also want to fetch all pages of products that match a certain criteria
 ```
-Magentwo::Product.gt(:updated_at => my_last_sync_value).each_page(512) do |page|
+Magentwo::Product.from(:updated_at => my_last_sync_value).each_page(512) do |page|
   p page
 end
 ```
 
 # Order
-On default the results are ordered as Magento2 "thinks" its best. At any place you may add the `order_by` to sepcify this to your liking. If you skip the `ASC/DESC` argument, `ASC` will be set by default.
+By default the results are ordered as Magento2 "thinks" its best. At any place you may add the `order_by` to sepcify this to your liking. If you skip the `ASC/DESC` argument, `ASC` will be set.
 ```
 Magentwo::Product.order_by(:id, "ASC").all
 Magentwo::Product.order_by(:id, "DESC").all
