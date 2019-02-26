@@ -67,6 +67,21 @@ Look for all Products whose name includes the word "Computer"
 Magentwo::Product.like(:name => "%Computer%").all
 ```
 
+Compare using `gt`, `gteq`, `lt` or `lteq`.
+```
+Magentwo::Product.lt(:updated_at => Time.new).all
+Magentwo::Product.gt(:id => 1337).first
+Magentwo::Product.gteq(:created_at => Time.new(2018, 1, 1)).lteq(:created_at => Time.new(2018, 12, 31)).all
+```
+
+All of these filter-functions can be chained as needed
+
+# Select
+If you know which fields you are interested in you can speed up the fetching process by only requesting these fields
+```
+Magentwo::Product.filter(...).select(:id, :sku).all
+```
+
 # Pagination
 On default the pagesize is set to 20, you can change this with
 ```
@@ -84,6 +99,19 @@ To iterate threw all the pages use `each_page`. Again the pagesize parameter is 
 Magentwo::Product.each_page(512) do |page|
   p page
 end
+```
+You may also want to fetch all pages of products that match a certain criteria
+```
+Magentwo::Product.gt(:updated_at => my_last_sync_value).each_page(512) do |page|
+  p page
+end
+```
+
+# Order
+On default the results are ordered as Magento2 "thinks" its best. At any place you may add the `order_by` to sepcify this to your liking. If you skip the `ASC/DESC` argument, `ASC` will be set by default.
+```
+Magentwo::Product.order_by(:id, "ASC").all
+Magentwo::Product.order_by(:id, "DESC").all
 ```
 
 # Updates
