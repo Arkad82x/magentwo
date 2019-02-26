@@ -141,4 +141,11 @@ customer.lastname = "Foo"
 customer.save
 ```
 
-to be continued
+# Delete
+To delete a Model use the `delete` method
+```
+product = Magentwo::Product.first
+product.delete
+```
+
+to be continued ...
