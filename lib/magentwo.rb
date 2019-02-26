@@ -6,11 +6,25 @@ require 'logger'
 
 module Magentwo
   Models = %w(base product customer order coupon sales_rule category cart)
+  @@mutex = Mutex.new
   def self.connect host=nil, user_name=nil, password=nil
     raise ArgumentError, "no host specified" unless host
     raise ArgumentError, "no user_name specified" unless user_name
     raise ArgumentError, "no password specified" unless password
     Base.adapter = Adapter.new host, user_name, password
+  end
+
+  def self.with connection
+    raise ArgumentError, "no connection specified" unless connection
+    @@mutex.synchronize do
+      old_connection = Magentwo::Base.adapter
+      begin
+        Magentwo::Base.adapter = connection
+        yield
+      ensure
+        Magentwo::Base.adapter = old_connection
+      end
+    end
   end
 
   def self.logger= logger
