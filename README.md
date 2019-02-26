@@ -23,9 +23,20 @@ bundle
 
 
 # How to connect to your magento 2 shop
-Currently there is only one connection at a time possible
+When only using one connection simply type
 ```
-  Magentwo.connect http://example.com, username, password  
+  Magentwo.connect "http://example.com", "user_name", "password"  
+```
+When using multiple connections at once you can save the result of `Magentwo.connect` and use the `Magentwo.with` method
+```
+  connection1 = Magentwo.connect "http://example1.com", "user_name", "password"
+  connection2 = Magentwo.connect "http://example2.com", "user_name", "password"
+  Magentwo.with (connection1) do
+    #do things in the context of connection1
+  end
+  Magentwo.with (connection2) do
+    #do things in the context of connection2
+  end
 ```
 
 # How to use
