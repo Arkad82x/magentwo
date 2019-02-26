@@ -32,7 +32,7 @@ module Magentwo
   end
 
   def self.logger
-    @@logger ||= Logger.new STDOUT, {:level => Logger::DEBUG}
+    @@logger ||= Logger.new STDOUT, {:level => Logger::INFO}
   end
 
   def self.default_page_size
