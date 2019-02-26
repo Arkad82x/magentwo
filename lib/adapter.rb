@@ -24,6 +24,7 @@ module Magentwo
           transform parsed
         end
       when :delete
+        response
       else
         raise ArgumentError, "unknown method type. Expected :get, :get_with_meta_data, :post, :put or :delete. #{method} #{path}"
       end
