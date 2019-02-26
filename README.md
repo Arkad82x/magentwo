@@ -31,6 +31,7 @@ When using multiple connections at once you can save the result of `Magentwo.con
 ```
   connection1 = Magentwo.connect "http://example1.com", "user_name", "password"
   connection2 = Magentwo.connect "http://example2.com", "user_name", "password"
+  
   Magentwo.with (connection1) do
     #do things in the context of connection1
   end
