@@ -64,6 +64,14 @@ module Magentwo
       Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + [Filter::Like.new(args.keys.first, args.values.first)])
     end
 
+    def from args
+      Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + [Filter::From.new(args.keys.first, args.values.first)])
+    end
+
+    def to args
+      Dataset.new self.model, self.opts.merge(:filters => self.opts[:filters] + [Filter::To.new(args.keys.first, args.values.first)])
+    end
+
     #################
     # Pagination
     ################
@@ -108,23 +116,54 @@ module Magentwo
     #################
     # Transformation
     ################
+    def print_readable
+      ds = self
+
+      puts "*** Pagination ***"
+      puts ds.opts[:pagination][:current_page].to_s
+      puts ds.opts[:pagination][:page_size].to_s
+
+      puts "*** Filters ***"
+      ds.opts[:filters].each do |filter|
+        puts filter.to_s
+      end
+
+      puts "*** Ordering ***"
+      order_filters = ds.opts[:ordering]
+      if order_filters.size > 0
+        order_filters.each do |filter|
+          puts filter.to_s
+        end
+      else
+        puts "non specified"
+      end
+
+      puts "*** Fields ***"
+      if fields = ds.opts[:fields]&.fields
+        puts "Fetch only: #{fields}"
+      else
+        puts "Fetch everything"
+      end
+    end
+
     def to_query
+      self.validate
       [
-        self.opts[:filters]
+        ds.opts[:filters]
         .each_with_index
         .map { |opt, idx| opt.to_query(idx) }
         .join("&"),
 
-        self.opts[:pagination]
+        ds.opts[:pagination]
         .map { |k, v| v.to_query}
         .join("&"),
 
 
-        self.opts[:ordering]
+        ds.opts[:ordering]
         .map { |opt, idx| opt.to_query(idx) }
         .join("&"),
 
-        self.opts[:fields]? self.opts[:fields].to_query() : ""
+        ds.opts[:fields]? ds.opts[:fields].to_query() : ""
       ].reject(&:empty?)
       .join("&")
     end
@@ -155,6 +194,13 @@ module Magentwo
         received_element_count = page.count
         current_page += 1
       end
+    end
+
+    #################
+    # Validation
+    ################
+    def validate
+      true
     end
   end
 end

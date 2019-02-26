@@ -1,6 +1,7 @@
 require 'uri'
 require 'net/http'
 require 'json'
+require 'time'
 require 'logger'
 
 module Magentwo

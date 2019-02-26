@@ -14,6 +14,10 @@ module Magentwo
         "searchCriteria[filter_groups][#{idx}][filters][0][condition_type]=#{self.class.name.split("::").last.downcase}"]
         .join("&")
       end
+
+      def to_s
+        "#{self.field} #{self.class.name.split("::").last.downcase} #{self.value}"
+      end
     end
 
     class CompareArray < Compare
@@ -23,6 +27,10 @@ module Magentwo
         "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{URI::encode(self.value.map(&:to_s).join(","))}",
         "searchCriteria[filter_groups][#{idx}][filters][0][condition_type]=#{self.class.name.split("::").last.downcase}"]
         .join("&")
+      end
+
+      def to_s
+        "#{self.field} #{self.class.name.split("::").last.downcase} #{self.value}"
       end
     end
 
@@ -36,6 +44,10 @@ module Magentwo
       def to_query idx=nil
         "searchCriteria[#{key}]=#{value}"
       end
+
+      def to_s
+        "#{self.key} == #{self.value}"
+      end
     end
 
     class Multi
@@ -48,6 +60,12 @@ module Magentwo
         kvps.map do |kvp|
           "searchCriteria[#{kvp[:key]}]=#{kvp[:value]}"
         end.join("&")
+      end
+
+      def to_s
+        self.kvps.map do |kvp|
+          "#{kvp[:key]} = #{kvp[:value]}"
+        end.join("\n")
       end
     end
 
@@ -77,6 +95,12 @@ module Magentwo
     end
 
     class Lteq < Magentwo::Filter::Compare
+    end
+
+    class From < Magentwo::Filter::Compare
+    end
+
+    class To < Magentwo::Filter::Compare
     end
 
     class PageSize < Magentwo::Filter::Simple
