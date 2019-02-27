@@ -22,7 +22,7 @@ module Magentwo
       end
 
       def unique_identifier
-        Magentwo::Logger.error "orders do not container id on default requests, therefore they cannot be targeted on the API"
+        Magentwo::Logger.error "orders do not contain id on default requests, therefore they cannot be targeted on the API"
         nil
       end
     end
