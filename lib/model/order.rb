@@ -11,6 +11,7 @@ module Magentwo
     end
 
     def customer
+      self.check_presence :customer_id
       Magentwo::Customer[self.customer_id]
     end
 

@@ -18,11 +18,13 @@ module Magentwo
 
     def save
       self.validate
+      self.check_presence self.class.unique_identifier
       response = Magentwo::Base.call :put, "#{self.class.base_path}/#{self.send(self.class.unique_identifier)}", self
       self.class.new response
     end
 
     def delete
+      self.check_presence self.class.unique_identifier
       Magentwo::Base.call :delete, "#{self.class.base_path}/#{self.send(self.class.unique_identifier)}", nil
     end
 

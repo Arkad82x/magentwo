@@ -4,10 +4,12 @@ module Magentwo
     Attributes.each do |attr| attr_accessor attr end
 
     def generate quantity:1, length:16, format:(:alpha), delimiter:"-", delimiter_at_every:4
+      self.check_presence :rule_id
       Magentwo::Coupon.generate self.rule_id, quantity:quantity, length:length, format:format, delimiter:delimiter, delimiter_at_every:delimiter_at_every
     end
 
     def coupons
+      self.check_presence :rule_id
       Magentwo::Coupon.filter(:rule_id => self.rule_id).all
     end
 
