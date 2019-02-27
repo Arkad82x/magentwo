@@ -35,6 +35,19 @@ module Magentwo
     @@logger ||= Logger.new STDOUT, {:level => Logger::INFO}
   end
 
+  def self.log_level= level
+    new_log_level = case level
+    when :debug then Logger::DEBUG
+    when :info  then Logger::INFO
+    when :warn then Logger::WARN
+    when :error then Logger::ERROR
+    when :fatal then Logger::FATAL
+    else
+      raise ArgumentError, "invalid log_level"
+    end
+    self.logger= Logger.new STDOUT, {:level => new_log_level}
+  end
+
   def self.default_page_size
     @@default_page_size ||= 20
   end
@@ -60,5 +73,5 @@ require_relative 'dataset.rb'
 require_relative 'util/validator.rb'
 
 Magentwo::Models.each do |file_name|
-	require_relative("model/#{file_name}.rb")
+  require_relative("model/#{file_name}.rb")
 end
