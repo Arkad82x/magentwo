@@ -13,6 +13,9 @@ module Magentwo
       Magentwo::Coupon.filter(:rule_id => self.rule_id).all
     end
 
+    def to_json
+      Hash["rule", self.to_h].to_json
+    end
 
     class << self
       def get_path
