@@ -85,10 +85,17 @@ module Magentwo
         base_path
       end
 
-      def all ds=self.dataset
-        self.get(ds.to_query)
+      def all ds=self.dataset, meta_data:false
+        response = self.get(ds.to_query, :meta_data => meta_data)
+        items = (meta_data ? response[:items] : response)
         .map do |item|
           self.new item
+        end
+        if meta_data
+          response[:items] = items
+          response
+        else
+          items
         end
       end
 

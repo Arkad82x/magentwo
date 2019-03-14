@@ -109,8 +109,8 @@ module Magentwo
       self.model.first self
     end
 
-    def all
-      self.model.all self
+    def all meta_data:false
+      self.model.all self, :meta_data => meta_data
     end
 
     #################
@@ -187,12 +187,11 @@ module Magentwo
 
       received_element_count = page_size
       current_page = 1
-      while(received_element_count == page_size) do
-        page = self.page(current_page, page_size).all
-
-        block.call(page)
-
-        received_element_count = page.count
+      total_count = nil
+      until(total_count && current_page*page_size > total_count) do
+        page = self.page(current_page, page_size).all meta_data:true
+        total_count = page[:total_count] unless total_count
+        block.call(page[:items])
         current_page += 1
       end
     end
