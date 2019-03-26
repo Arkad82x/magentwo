@@ -1,6 +1,7 @@
 module Magentwo
   class Adapter < Magentwo::Connection
-    DateFields = %i(created_at dob  updated_at)
+    DateTimeFields = %i(created_at updated_at change_status_at)
+    DateFields = %i(dob)
     def call method, path, params
       http_method, params = case method
       when :put, :post, :delete then [method, params.to_json]
@@ -50,7 +51,10 @@ module Magentwo
 
     def date_transform item
       DateFields.each do |date_field|
-        item[date_field] = Time.parse item[date_field] if item[date_field]
+        item[date_field] = Date.parse item[date_field] if item[date_field]
+      end
+      DateTimeFields.each do |datetime_field|
+        item[datetime_field] = Time.parse item[datetime_field] if item[datetime_field]
       end
       item
     end
