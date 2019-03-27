@@ -54,7 +54,7 @@ module Magentwo
         item[date_field] = Date.parse item[date_field] if item[date_field]
       end
       DateTimeFields.each do |datetime_field|
-        item[datetime_field] = Time.parse item[datetime_field] if item[datetime_field]
+        item[datetime_field] = (Time.parse "#{item[datetime_field]} UTC").getlocal if item[datetime_field]
       end
       item
     end
