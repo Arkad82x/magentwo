@@ -188,7 +188,7 @@ module Magentwo
       received_element_count = page_size
       current_page = 1
       total_count = nil
-      until(total_count && current_page*page_size > total_count) do
+      until(total_count && current_page*page_size > (total_count + page_size)) do
         page = self.page(current_page, page_size).all meta_data:true
         total_count = page[:total_count] unless total_count
         block.call(page[:items])
