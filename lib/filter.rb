@@ -21,7 +21,7 @@ module Magentwo
     end
 
     class CompareArray < Compare
-      def to_query id
+      def to_query idx
         [
         "searchCriteria[filter_groups][#{idx}][filters][0][field]=#{self.field}",
         "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{URI::encode(self.value.map(&:to_s).join(","))}",
