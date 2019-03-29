@@ -7,7 +7,7 @@ module Magentwo
         @value = value
       end
 
-      def to_query idx
+      def to_query idx, field:self.field, value:self.value
         [
         "searchCriteria[filter_groups][#{idx}][filters][0][field]=#{self.field}",
         "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{URI::encode(self.value.to_s)}",
@@ -21,7 +21,7 @@ module Magentwo
     end
 
     class CompareArray < Compare
-      def to_query idx
+      def to_query id
         [
         "searchCriteria[filter_groups][#{idx}][filters][0][field]=#{self.field}",
         "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{URI::encode(self.value.map(&:to_s).join(","))}",
@@ -98,6 +98,13 @@ module Magentwo
     end
 
     class From < Magentwo::Filter::Compare
+      def to_query idx
+        value = case self.value
+        when Time then self.value.utc
+        else self.value
+        end
+        super idx, value:value
+      end
     end
 
     class To < Magentwo::Filter::Compare
