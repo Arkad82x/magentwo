@@ -1,19 +1,20 @@
 module Magentwo
   class Connection
-    attr_accessor :host, :port, :user, :password, :token, :base_path
+    attr_accessor :host, :port, :user, :password, :token, :base_path, :scheme
 
     def initialize uri, user, password, base_path:nil
       uri = URI(uri)
       @host = uri.host
       @port = uri.port
       @user = user
+      @scheme = uri.scheme
       @password = password
       @base_path = base_path || "/rest/V1"
       request_token
     end
 
     def request_token
-      Net::HTTP.start(self.host,self.port, :use_ssl => uri.scheme == 'https') do |http|
+      Net::HTTP.start(self.host,self.port, :use_ssl => self.scheme == 'https') do |http|
         url = "#{base_path}/integration/admin/token"
         Magentwo.logger.info "POST #{url}"
         req = Net::HTTP::Post.new(url)
@@ -30,7 +31,7 @@ module Magentwo
       Magentwo.logger.debug "DATA #{data}"
 
       url = "#{base_path}/#{path}"
-      Net::HTTP.start(self.host,self.port, :use_ssl => uri.scheme == 'https') do |http|
+      Net::HTTP.start(self.host,self.port, :use_ssl => self.scheme == 'https') do |http|
         req = Net::HTTP::Delete.new(url)
         req["Authorization"] = "Bearer #{self.token}"
         req['Content-Type'] = "application/json"
@@ -43,7 +44,7 @@ module Magentwo
       Magentwo.logger.info "PUT #{host}/#{base_path}/#{path}"
       Magentwo.logger.debug "DATA #{data}"
       url = "#{base_path}/#{path}"
-      Net::HTTP.start(self.host,self.port, :use_ssl => uri.scheme == 'https') do |http|
+      Net::HTTP.start(self.host,self.port, :use_ssl => self.scheme == 'https') do |http|
         req = Net::HTTP::Put.new(url)
         req["Authorization"] = "Bearer #{self.token}"
         req['Content-Type'] = "application/json"
@@ -56,7 +57,7 @@ module Magentwo
       Magentwo.logger.info "POST #{host}/#{path}"
       Magentwo.logger.debug "DATA #{data}"
       url = "#{base_path}/#{path}"
-      Net::HTTP.start(self.host,self.port, :use_ssl => uri.scheme == 'https') do |http|
+      Net::HTTP.start(self.host,self.port, :use_ssl => self.scheme == 'https') do |http|
         req = Net::HTTP::Post.new(url)
         req["Authorization"] = "Bearer #{self.token}"
         req['Content-Type'] = "application/json"
@@ -69,7 +70,7 @@ module Magentwo
     def get path, query
       Magentwo.logger.info "GET #{host}#{base_path}/#{path}?#{query}"
       url = "#{base_path}/#{path}?#{query}"
-      Net::HTTP.start(self.host,self.port, :use_ssl => uri.scheme == 'https') do |http|
+      Net::HTTP.start(self.host,self.port, :use_ssl => self.scheme == 'https') do |http|
         req = Net::HTTP::Get.new(url)
         req["Authorization"] = "Bearer #{self.token}"
         req['Content-Type'] = "application/json"
