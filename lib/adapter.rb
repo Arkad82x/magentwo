@@ -37,7 +37,8 @@ module Magentwo
       when "200"
         JSON.parse response.body, :symbolize_names => true
       else
-        puts "request failed #{response.code} #{response.body}"
+        puts "error #{response.code}: #{JSON.parse(response.body)}"
+        return nil
       end
     end
 

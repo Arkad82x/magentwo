@@ -65,7 +65,8 @@ module Magentwo
       attr_accessor :adapter
 
       def [] unique_identifier_value
-        self.new (Magentwo::Base.get nil, path:"#{base_path}/#{unique_identifier_value}")
+        result = Magentwo::Base.get nil, path:"#{base_path}/#{unique_identifier_value}"
+        self.new result if result
       end
 
       def unique_identifier
@@ -87,6 +88,7 @@ module Magentwo
 
       def all ds=self.dataset, meta_data:false
         response = self.get(ds.to_query, :meta_data => meta_data)
+        return [] if response.nil?
         items = (meta_data ? response[:items] : response)
         .map do |item|
           self.new item
@@ -100,7 +102,8 @@ module Magentwo
       end
 
       def first ds=self.dataset
-        self.new self.get(ds.page(1, 1).to_query).first
+        response = self.get(ds.page(1, 1).to_query).first
+        self.new response if response
       end
 
       def each_page page_size=Magentwo.default_page_size, &block
