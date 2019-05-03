@@ -5,7 +5,7 @@ require 'time'
 require 'logger'
 
 module Magentwo
-  Models = %w(base product customer order coupon sales_rule category cart stock_items)
+  Models = %w(base product customer order coupon sales_rule category cart stock_item)
   @@mutex = Mutex.new
   def self.connect host=nil, user_name=nil, password=nil
     raise ArgumentError, "no host specified" unless host
