@@ -4,7 +4,7 @@ module Magentwo
     Attributes.each do |attr| attr_accessor attr end
 
     def stocks
-      Magentwo::StockItems[self.sku]
+      Magentwo::StockItem[self.sku]
     end
 
     class << self
