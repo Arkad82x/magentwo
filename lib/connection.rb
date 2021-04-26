@@ -2,15 +2,23 @@ module Magentwo
   class Connection
     attr_accessor :host, :port, :user, :password, :token, :base_path, :scheme
 
-    def initialize uri, user, password, base_path:nil
+    def initialize uri:, user:nil, password:nil, base_path:nil, token:nil
       uri = URI(uri)
       @host = uri.host
       @port = uri.port
-      @user = user
       @scheme = uri.scheme
-      @password = password
       @base_path = base_path || "/rest/V1"
-      request_token
+
+      if (user && password)
+        @user = user
+        @password = password
+        request_token
+      elsif (token)
+       @token = token
+      else
+        raise ArgumentError, "expected user/password or token"
+      end
+
     end
 
     def request_token
