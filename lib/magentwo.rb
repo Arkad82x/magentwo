@@ -17,7 +17,7 @@ module Magentwo
   def self.connect_with_token host=nil, token=nil
     raise ArgumentError, "no host specified" unless host
     raise ArgumentError, "no token specified" unless token
-    Base.adapter = Adapter.new ({token: token, uri: host})
+    Base.adapter = Adapter.new(token: token, uri: host)
   end
 
   def self.with connection
