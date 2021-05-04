@@ -14,7 +14,7 @@ module Magentwo
         @password = password
         request_token
       elsif (token)
-       @token = token
+        @token = token
       else
         raise ArgumentError, "expected user/password or token"
       end
@@ -34,56 +34,34 @@ module Magentwo
       end
     end
 
-    def delete path, data
-      Magentwo.logger.info "DELETE #{host}/#{base_path}/#{path}"
+    def request verb, path:, data:nil
+      Magentwo.logger.info "#{verb.to_s} #{host}/#{base_path}/#{path}"
       Magentwo.logger.debug "DATA #{data}"
 
       url = "#{base_path}/#{path}"
       Net::HTTP.start(self.host,self.port, :use_ssl => self.scheme == 'https') do |http|
-        req = Net::HTTP::Delete.new(url)
+        req = verb.new(url)
         req["Authorization"] = "Bearer #{self.token}"
         req['Content-Type'] = "application/json"
         req.body = data
         http.request(req)
       end
+    end
+
+    def delete path, data
+      request Net::HTTP::Delete, path:path, data:data
     end
 
     def put path, data
-      Magentwo.logger.info "PUT #{host}/#{base_path}/#{path}"
-      Magentwo.logger.debug "DATA #{data}"
-      url = "#{base_path}/#{path}"
-      Net::HTTP.start(self.host,self.port, :use_ssl => self.scheme == 'https') do |http|
-        req = Net::HTTP::Put.new(url)
-        req["Authorization"] = "Bearer #{self.token}"
-        req['Content-Type'] = "application/json"
-        req.body = data
-        http.request(req)
-      end
+      request Net::HTTP::Put, path:path, data:data
     end
 
     def post path, data
-      Magentwo.logger.info "POST #{host}/#{path}"
-      Magentwo.logger.debug "DATA #{data}"
-      url = "#{base_path}/#{path}"
-      Net::HTTP.start(self.host,self.port, :use_ssl => self.scheme == 'https') do |http|
-        req = Net::HTTP::Post.new(url)
-        req["Authorization"] = "Bearer #{self.token}"
-        req['Content-Type'] = "application/json"
-        req.body = data
-        http.request(req)
-      end
+      request Net::HTTP::Put, path:path, data:data
     end
 
-
     def get path, query
-      Magentwo.logger.info "GET #{host}#{base_path}/#{path}?#{query}"
-      url = "#{base_path}/#{path}?#{query}"
-      Net::HTTP.start(self.host,self.port, :use_ssl => self.scheme == 'https') do |http|
-        req = Net::HTTP::Get.new(url)
-        req["Authorization"] = "Bearer #{self.token}"
-        req['Content-Type'] = "application/json"
-        http.request(req)
-      end
+      request Net::HTTP::Get, path:"#{path}?#{query}"
     end
   end
 end
