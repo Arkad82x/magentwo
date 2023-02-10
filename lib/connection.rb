@@ -57,7 +57,7 @@ module Magentwo
     end
 
     def post path, data
-      request Net::HTTP::Put, path:path, data:data
+      request Net::HTTP::Post, path:path, data:data
     end
 
     def get path, query

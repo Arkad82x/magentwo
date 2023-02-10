@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'magentwo'
-  s.version     = '0.1.91'
-  s.date        = '2019-01-17'
+  s.version     = '0.1.92'
+  s.date        = '2023-02-10'
   s.summary     = "Magento 2 API Wrapper"
   s.description = "Provides a simple Ruby Interface to interact with the Magento 2 API"
   s.authors     = ["André Mueß"]
