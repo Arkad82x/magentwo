@@ -10,7 +10,7 @@ module Magentwo
       def to_query idx, field:self.field, value:self.value
         [
         "searchCriteria[filter_groups][#{idx}][filters][0][field]=#{self.field}",
-        "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{URI::encode(self.value.to_s)}",
+        "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{CGI.escape(self.value.to_s)}",
         "searchCriteria[filter_groups][#{idx}][filters][0][condition_type]=#{self.class.name.split("::").last.downcase}"]
         .join("&")
       end
@@ -24,7 +24,7 @@ module Magentwo
       def to_query idx
         [
         "searchCriteria[filter_groups][#{idx}][filters][0][field]=#{self.field}",
-        "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{URI::encode(self.value.map(&:to_s).join(","))}",
+        "searchCriteria[filter_groups][#{idx}][filters][0][value]=#{CGI.escape(self.value.map(&:to_s).join(","))}",
         "searchCriteria[filter_groups][#{idx}][filters][0][condition_type]=#{self.class.name.split("::").last.downcase}"]
         .join("&")
       end
@@ -141,7 +141,7 @@ module Magentwo
       end
       def to_query idx=nil
         #TODO api supports nested field selection e.g. items[address[street]]
-        "fields=items[#{URI::encode(self.fields.map(&:to_s).join(","))}]"
+        "fields=items[#{CGI.escape(self.fields.map(&:to_s).join(","))}]"
       end
     end
   end
