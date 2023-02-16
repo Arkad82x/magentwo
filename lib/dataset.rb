@@ -90,7 +90,7 @@ module Magentwo
     # Fetching
     ################
     def info
-      result = self.model.get self.page(1, 1).to_query, {:meta_data => true}
+      result = self.model.get self.page(1, 1).to_query, :meta_data => true
       {
         :fields => result[:items]&.first&.keys,
         :total_count => result[:total_count]
