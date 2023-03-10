@@ -19,13 +19,13 @@ module Magentwo
     def save
       self.validate
       self.check_presence self.class.unique_identifier
-      response = Magentwo::Base.call :put, "#{self.class.base_path}/#{self.send(self.class.unique_identifier)}", self
+      response = Magentwo::Base.call :put, "#{self.class.base_path}/#{self.send(CGI.escape(self.class.unique_identifier))}", self
       self.class.new response
     end
 
     def delete
       self.check_presence self.class.unique_identifier
-      Magentwo::Base.call :delete, "#{self.class.base_path}/#{self.send(self.class.unique_identifier)}", nil
+      Magentwo::Base.call :delete, "#{self.class.base_path}/#{self.send(CGI.escape(self.class.unique_identifier))}", nil
     end
 
     def validate
@@ -65,7 +65,7 @@ module Magentwo
       attr_accessor :adapter
 
       def [] unique_identifier_value
-        result = Magentwo::Base.get nil, path:"#{base_path}/#{unique_identifier_value}"
+        result = Magentwo::Base.get nil, path:"#{base_path}/#{CGI.escape(unique_identifier_value)}"
         self.new result if result
       end
 
@@ -138,6 +138,7 @@ module Magentwo
       end
 
       def call method, path=self.base_path, params
+        puts method, path, params
         Magentwo::Base.adapter.call(method, path, params)
       end
 
