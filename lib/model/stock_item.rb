@@ -8,7 +8,7 @@ module Magentwo
 
     class << self
       def unique_identifier
-        :item_id
+        'item_id'
       end
     end
   end
