@@ -7,6 +7,9 @@ module Magentwo
     Attributes.each do |attr| attr_accessor attr end
 
     class << self
+      def unique_identifier
+        :item_id
+      end
     end
   end
 end
