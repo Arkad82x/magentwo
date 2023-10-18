@@ -11,7 +11,7 @@ module Magentwo
     raise ArgumentError, "no host specified" unless host
     raise ArgumentError, "no user_name specified" unless user_name
     raise ArgumentError, "no password specified" unless password
-    Base.adapter = Adapter.new ({uri: host, user: user_name, password: password})
+    Base.adapter = Adapter.new uri: host, user: user_name, password: password
   end
 
   def self.connect_with_token host=nil, token=nil
